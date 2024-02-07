@@ -97,6 +97,7 @@ module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
     managedIdentities: {
       systemAssigned: true
     }
+    encryptionAtHost: false
   }
   dependsOn: [
     resourceGroup

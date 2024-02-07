@@ -27,7 +27,7 @@ Containing:
 
 ## Deployment
 
-:warning: **Average Deployment time**: 15 minutes
+:hourglass_flowing_sand: **Average Solution End to End Deployment time**: 20 minutes
 
 - Open a Visual Studio Code session, clone the repository and then open up a VS Code session in the folder for the cloned repo.
 
@@ -76,7 +76,7 @@ $KeyVault = Get-AzureRmKeyVault
 nslookup "$($KeyVault.VaultName).vault.azure.net"
 ```
 
-- The returned value should be the Private IP address of the Key Vault. Meaning that the data plane traffic to this Key Vault is using the Virtual Network.
+- :white_check_mark: The returned value should be the Private IP address of the Key Vault. Meaning that the data plane traffic to this Key Vault is using the Virtual Network.
 
 ---
 
@@ -110,3 +110,9 @@ These data plane operations are only accessible from the Virtual Network
 Remove-AzResourceGroup -Name "rg-<<youridentifer>>-workload" -Force
 Remove-AzResourceGroup -Name "rg-<<youridentifer>>-core" -Force
 ```
+
+---
+
+:warning: Ensure you delete the resources to avoid incurring costs.
+
+---
