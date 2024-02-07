@@ -1,19 +1,34 @@
 targetScope = 'subscription'
 
+@maxLength(7)
+@description('Optional. Unique identifier for the deployment. Will appear in resource names. Must be 7 characters or less.')
 param identifier string = 'avmdemo'
+
+@description('Optional. The Workload Resource Group name.')
 param resourceGroupNameWorkload string = 'rg-${identifier}-workload'
 
+@description('Optional. The location for all resources.')
+param location string = deployment().location
+
+@description('Required. The password for the virtual machine.')
 @secure()
 param virtualMachinePassword string
 
+@description('Required. The subnet resource ID for the virtual machine.')
 param subnetResourceId string
+
+@description('Required. The private DNS zone resource ID for the Key Vault.')
 param privateDnsZoneKeyVaultResourceId string
+
+@description('Generated. Used as a basis for unique resource names.')
+param baseTime string = utcNow('u')
 
 // Resource Group
 module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
   name: '${uniqueString(deployment().name)}-rg'
   params: {
     name: resourceGroupNameWorkload
+    location: location
   }
 }
 
@@ -22,7 +37,8 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
   scope: az.resourceGroup(resourceGroupNameWorkload)
   name: '${uniqueString(deployment().name)}-kv'
   params: {
-    name: 'kv-${identifier}'
+    name: 'kv-${identifier}-${substring(uniqueString(baseTime), 0, 3)}'
+    location: location
     enableRbacAuthorization: true
     publicNetworkAccess: 'Disabled'
     roleAssignments: [
@@ -39,10 +55,6 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
         ]
         service: 'vault'
         subnetResourceId: subnetResourceId
-        tags: {
-          Environment: 'Non-Prod'
-          Role: 'DeploymentValidation'
-        }
       }
     ]
     enableSoftDelete: false
@@ -56,6 +68,7 @@ module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
   name: '${uniqueString(deployment().name)}-vm'
   params: {
     name: 'vm-${identifier}'
+    location: location
     computerName: 'vm-${identifier}'
     adminUsername: 'vmadmin'
     imageReference: {
@@ -87,6 +100,7 @@ module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
     managedIdentities: {
       systemAssigned: true
     }
+    encryptionAtHost: false
   }
   dependsOn: [
     resourceGroup

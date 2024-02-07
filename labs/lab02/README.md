@@ -27,18 +27,40 @@ Containing:
 
 ## Deployment
 
-**Average Deployment time**: 10 minutes
+:hourglass_flowing_sand: **Average Solution End to End Deployment time**: 20 minutes
 
 - Open a Visual Studio Code session, clone the repository and then open up a VS Code session in the folder for the cloned repo.
 
-- Deploy the [main.bicep](/solution/main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Then specify the Virtual Machine password field which is a secure string.
+### Method (1) - main.bicep file
+
+- Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\main.bicep'
+New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep'
 ```
 
-- The deployment will first deploy the [core.bicep](/solution/childModules/core.bicep) file, which results in a Resource Group with the core resources inside it.
-- The deployment will then deploy the the [workload.bicep](/solution/childModules/workload.bicep), which results in another Resource Group with the workload resources inside it.
+### Method (2) - main.parameters.json file
+
+- Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
+
+```powershell
+New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep' -TemplateParameterFile '<<path to the repo>>\labs\lab02\main.parameters.json'
+```
+
+---
+
+:information_source: In both deployment methods, a prompt will appear asking for the password for the Virtual Machine. This is the password for the `vmadmin` user on the Virtual Machine.
+
+---
+
+- The deployment will first deploy the [core.bicep](../lab02/childModules/core.bicep) file, which results in a Resource Group with the core resources inside it.
+- The deployment will then deploy the the [workload.bicep](../lab02/childModules/workload.bicep), which results in another Resource Group with the workload resources inside it.
+
+---
+
+:warning: The Key Vault name contains a 3 letter string generated from the base time function. This is to ensure that the Key Vault name is unique. This means that the Key Vault name will be different for each deployment.
+
+---
 
 ## Testing
 
@@ -47,7 +69,8 @@ Once the deployment is complete, navigate to the Virtual Machine blade, and conn
 - Provide your user name and password, which will then open up a new browser tab for the RDP over HTTPS session using Azure Bastion.
 
 ---
-Note: The username for the Virtual Machine is `vmadmin` and the password is the one you used when deploying the template
+
+:information_source: The username for the Virtual Machine is `vmadmin` and the password is the one you used when deploying the template.
 
 ---
 
@@ -59,10 +82,11 @@ $KeyVault = Get-AzureRmKeyVault
 nslookup "$($KeyVault.VaultName).vault.azure.net"
 ```
 
-- The returned value should be the Private IP address of the Key Vault. Meaning that the data plane traffic to this Key Vault is using the Virtual Network.
+- :white_check_mark: The returned value should be the Private IP address of the Key Vault. Meaning that the data plane traffic to this Key Vault is using the Virtual Network.
 
 ---
-**Note**: The reason Azure cmdlets work on this Virtual Machine is because Image of this VM contains a Visual Studio installation. However the cmdlets are using the legacy Azure RM modules and not the Az ones. But that is ok for our testing as it will have the necessary cmdlets needed to validate this demo.
+
+:information_source:**Note**: The reason Azure cmdlets work on this Virtual Machine is because Image of this VM contains a Visual Studio installation. However the cmdlets are using the legacy Azure RM modules and not the Az ones. But that is ok for our testing as it will have the necessary cmdlets needed to validate this demo.
 
 ---
 
@@ -92,3 +116,9 @@ These data plane operations are only accessible from the Virtual Network
 Remove-AzResourceGroup -Name "rg-<<youridentifer>>-workload" -Force
 Remove-AzResourceGroup -Name "rg-<<youridentifer>>-core" -Force
 ```
+
+---
+
+:warning: Ensure you delete the resources to avoid incurring costs.
+
+---

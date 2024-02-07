@@ -1,17 +1,25 @@
 targetScope = 'subscription'
 
+@maxLength(7)
+@description('Optional. Unique identifier for the deployment. Will appear in resource names. Must be 7 characters or less.')
 param identifier string = 'avmdemo'
+
+@description('Optional. The core Resource Group name.')
 param  resourceGroupNameCore string = 'rg-${identifier}-core'
+
+@description('Optional. The location for all resources.')
+param location string = deployment().location
 
 // Resource Group
 module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
   name: '${uniqueString(deployment().name)}-rg'
   params: {
     name: resourceGroupNameCore
+    location: location
   }
 }
 
-// Network Security Groups
+// Azure Bastion Network Security Group
 module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.2' = {
   scope: az.resourceGroup(resourceGroupNameCore)
   name: '${uniqueString(deployment().name)}-nsg-sn-bastionSubnet-vnet'
@@ -20,6 +28,7 @@ module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.
   ]
   params: {
     name: 'nsg-sn-bastionSubnet-vnet-${identifier}'
+    location: location
     securityRules: [
       {
         name: 'AllowHttpsInBound'
@@ -167,6 +176,7 @@ module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.
   }
 }
 
+// Default Subnet Network Security Group
 module nsg_subnet_default 'br/public:avm/res/network/network-security-group:0.1.2' = {
   scope: az.resourceGroup(resourceGroupNameCore)
   name: '${uniqueString(deployment().name)}-nsg-sn-default-vnet'
@@ -175,6 +185,7 @@ module nsg_subnet_default 'br/public:avm/res/network/network-security-group:0.1.
   ]
   params: {
     name: 'nsg-sn-default-vnet-${identifier}'
+    location: location
   }
 }
 
@@ -183,10 +194,11 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.1.1' = {
   scope: az.resourceGroup(resourceGroupNameCore)
   name: '${uniqueString(deployment().name)}-vnet'
   params: {
+    name: 'vnet-${identifier}'
+    location: location
     addressPrefixes: [
       '10.0.0.0/16'
     ]
-    name: 'vnet-${identifier}'
     subnets: [
       {
         addressPrefix: '10.0.0.0/24'
@@ -208,6 +220,7 @@ module publicIpBastion 'br/public:avm/res/network/public-ip-address:0.2.2' = {
   name: '${uniqueString(deployment().name)}-bst-pip'
   params: {
     name: 'pip-bst-vnet-${identifier}'
+    location: location
     skuName: 'Standard'
     publicIPAllocationMethod: 'Static'
   }
@@ -222,6 +235,7 @@ module azureBastion 'br/public:avm/res/network/bastion-host:0.1.1' = {
   name: '${uniqueString(deployment().name)}-bst'
   params: {
     name: 'bst-vnet-${identifier}'
+    location: location
     vNetId: virtualNetwork.outputs.resourceId
     skuName: 'Basic'
     bastionSubnetPublicIpResourceId: publicIpBastion.outputs.resourceId
@@ -234,6 +248,7 @@ module privateDnsZoneKeyVault 'br/public:avm/res/network/private-dns-zone:0.2.3'
   name: '${uniqueString(deployment().name)}-prdns-kv'
   params: {
     name: 'privatelink.vaultcore.azure.net'
+    location: 'global'
     virtualNetworkLinks: [
       {
         registrationEnabled: false
