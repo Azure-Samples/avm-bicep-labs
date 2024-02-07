@@ -41,6 +41,9 @@ module userAssignedIdentity 'br/public:avm/res/managed-identity/user-assigned-id
     name: 'umi-${identifier}'
     location: location
   }
+  dependsOn: [
+    resourceGroup
+  ]
 }
 
 // Key Vault
@@ -115,7 +118,4 @@ module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
     }
     encryptionAtHost: false
   }
-  dependsOn: [
-    resourceGroup
-  ]
 }
