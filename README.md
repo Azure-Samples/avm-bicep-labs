@@ -40,34 +40,12 @@ Your file structure should now look like this:
 ┃ ┣ 📜main.bicep
 ┃ ┗ 📜dependencies.bicep
 ┗ 📂lab02
-┃ ┣ 📜locals.bicep
-┃ ┗ 📜main.bicep
+┃ ┣ 📜main.bicep
+┃ ┗ 📜dependencies.bicep
 ┣ 📜.gitignore
 ┗ 📜README.md
 ```
 
-### Lab 01 - Base files and resources
-In this part, we are going to set up our Bicep root module and deploy an Azure Resource Group ready for the rest of the lab.
+### Lab 01
 
-Create a new folder under your lab folder called avm-lab.
-Copy the files from the part 1 folder into the avm-lab folder.
-powershell
-Copy code
-# Run from the avm-lab folder
-copy ../avm-terraform-labs/labs/part01-base/* .
-Your file structure should look like this:
-
-plaintext
-Copy code
-📂my-lab-folder
-┣ 📂avm-lab
-┃ ┣ 📜.gitignore
-┃ ┣ 📜locals.bicep
-┃ ┣ 📜main.bicep
-┃ ┣ 📜outputs.bicep
-┃ ┣ 📜terraform.bicep
-┃ ┗ 📜variables.bicep
-┗ 📂avm-terraform-labs
-Open Visual Studio Code and open the avm-lab folder. Hint: code .
-Examine the main.bicep file and other bicep files.
-// Continue adding instructions for subsequent parts similarly
+TBD
