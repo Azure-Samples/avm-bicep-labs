@@ -32,6 +32,19 @@ module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
   }
 }
 
+// User Assigned Identity
+module userAssignedIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.1.2' = {
+  scope: az.resourceGroup(resourceGroupNameWorkload)
+  name: '${uniqueString(deployment().name)}-umi'
+  params: {
+    name: 'umi-${identifier}'
+    location: location
+  }
+  dependsOn: [
+    resourceGroup
+  ]
+}
+
 // Key Vault
 module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
   scope: az.resourceGroup(resourceGroupNameWorkload)
@@ -44,7 +57,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
     roleAssignments: [
       {
         roleDefinitionIdOrName: 'Key Vault Secrets Officer'
-        principalId: virtualMachine.outputs.systemAssignedMIPrincipalId
+        principalId: userAssignedIdentity.outputs.principalId
         principalType: 'ServicePrincipal'
       }
     ]
@@ -98,11 +111,10 @@ module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
     vmSize: 'Standard_DS1_v2'
     adminPassword: virtualMachinePassword
     managedIdentities: {
-      systemAssigned: true
+      userAssignedResourceIds: [
+        userAssignedIdentity.outputs.resourceId
+      ]
     }
     encryptionAtHost: false
   }
-  dependsOn: [
-    resourceGroup
-  ]
 }

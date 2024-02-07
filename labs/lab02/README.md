@@ -23,7 +23,7 @@ Containing:
 Containing:
 
 - Azure Key Vault, with public network access disabled, and uses the Azure RBAC authorization model. It also has a Private Endpoint deployed into the Virtual Network workload subnet, and also linked to the Private DNS Zone for Azure Key Vault.
-- An Azure Virtual Machine deployed into Virtual Network workload subnet, with a System Assigned Managed Identity that has the 'Secrets Officer' Role at the Azure Key Vault Scope.
+- An Azure Virtual Machine deployed into Virtual Network workload subnet, with a User Assigned Managed Identity that has the 'Secrets Officer' Role at the Azure Key Vault Scope.
 
 ## Deployment
 
