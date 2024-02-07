@@ -1,57 +1,51 @@
-# Project Name
+# Introduction to using Azure Verified Modules for Bicep
 
-(short, 1-3 sentenced, description of the project)
+This repository provides lab-based samples that demonstrates how to use the Azure Verified Modules for Bicep. This repository contains full working lab solutions (lab01, lab02, ...), but you should follow the steps in the lab to understand how it fits together.
 
-## Features
+## Content
 
-This project framework provides the following features:
-
-* Feature 1
-* Feature 2
-* ...
-
-## Getting Started
+| File/folder | Description |
+|-------------|-------------|
+| `labs` | The files for the lab. |
+| `.gitignore` | Define what to ignore at commit time. |
+| `CHANGELOG.md` | List of changes to the sample. |
+| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
+| `README.md` | This README file. |
+| `LICENSE.md` | The license for the sample. |
 
 ### Prerequisites
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
+- Azure CLI: [Download](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli#install-or-update)
+- An Azure Subscription: [Free Account](https://azure.microsoft.com/en-gb/free/search/)
 
 ### Quickstart
-(Add steps to get up and running quickly)
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+The instructions for these samples are in the form of Labs. Follow along with them to get up and running.
 
+## Demo / Lab
 
-## Demo
+### Part 0 - Get the lab files
 
-A demo app is included to show how to use the project.
+In this part, we are going to get a local copy of the lab files for use in the rest of the lab.
 
-To run the demo, follow these steps:
+1. Create a new root folder for the lab in a location of your choice.
+2. Open a terminal and navigate to the new folder.
+3. Run `git clone https://github.com/Azure-Samples/avm-bicep-labs` to clone the lab files into the new folder; they will be in a subfolder called `avm-bicep-labs`.
 
-(Add steps to start up the demo)
+Your file structure should now look like this:
 
-1.
-2.
-3.
+```plaintext
+📂avm-bicep-labs
+┣ 📂lab01
+┃ ┣ 📜main.bicep
+┃ ┗ 📜dependencies.bicep
+┗ 📂lab02
+┃ ┣ 📜main.bicep
+┃ ┗ 📜dependencies.bicep
+┣ 📜.gitignore
+┗ 📜README.md
+```
 
-## Resources
+### Lab 01
 
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+TBD
