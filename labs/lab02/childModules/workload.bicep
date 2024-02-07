@@ -20,6 +20,9 @@ param subnetResourceId string
 @description('Required. The private DNS zone resource ID for the Key Vault.')
 param privateDnsZoneKeyVaultResourceId string
 
+@description('Generated. Used as a basis for unique resource names.')
+param baseTime string = utcNow('u')
+
 // Resource Group
 module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
   name: '${uniqueString(deployment().name)}-rg'
@@ -34,7 +37,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
   scope: az.resourceGroup(resourceGroupNameWorkload)
   name: '${uniqueString(deployment().name)}-kv'
   params: {
-    name: 'kv-${identifier}'
+    name: 'kv-${identifier}-${substring(uniqueString(baseTime), 0, 3)}'
     location: location
     enableRbacAuthorization: true
     publicNetworkAccess: 'Disabled'

@@ -33,7 +33,7 @@ Containing:
 
 ### Method (1) - main.bicep file
 
-- Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string).
+- Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
 New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep'
@@ -41,10 +41,10 @@ New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFi
 
 ### Method (2) - main.parameters.json file
 
-- Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string).
+- Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep' -TemplateParameterFile '<<path to the repo>>\\labs\lab02\main.parameters.json'
+New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep' -TemplateParameterFile '<<path to the repo>>\labs\lab02\main.parameters.json'
 ```
 
 ---
@@ -55,6 +55,12 @@ New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFi
 
 - The deployment will first deploy the [core.bicep](../lab02/childModules/core.bicep) file, which results in a Resource Group with the core resources inside it.
 - The deployment will then deploy the the [workload.bicep](../lab02/childModules/workload.bicep), which results in another Resource Group with the workload resources inside it.
+
+---
+
+:warning: The Key Vault name contains a 3 letter string generated from the base time function. This is to ensure that the Key Vault name is unique. This means that the Key Vault name will be different for each deployment.
+
+---
 
 ## Testing
 
