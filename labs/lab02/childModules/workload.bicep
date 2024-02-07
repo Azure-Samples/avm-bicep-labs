@@ -24,97 +24,9 @@ param privateDnsZoneKeyVaultResourceId string
 param baseTime string = utcNow('u')
 
 // Resource Group
-module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
-  name: '${uniqueString(deployment().name)}-rg'
-  params: {
-    name: resourceGroupNameWorkload
-    location: location
-  }
-}
 
 // User Assigned Identity
-module userAssignedIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.1.2' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
-  name: '${uniqueString(deployment().name)}-umi'
-  params: {
-    name: 'umi-${identifier}'
-    location: location
-  }
-  dependsOn: [
-    resourceGroup
-  ]
-}
 
 // Key Vault
-module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
-  name: '${uniqueString(deployment().name)}-kv'
-  params: {
-    name: 'kv-${identifier}-${substring(uniqueString(baseTime), 0, 3)}'
-    location: location
-    enableRbacAuthorization: true
-    publicNetworkAccess: 'Disabled'
-    roleAssignments: [
-      {
-        roleDefinitionIdOrName: 'Key Vault Secrets Officer'
-        principalId: userAssignedIdentity.outputs.principalId
-        principalType: 'ServicePrincipal'
-      }
-    ]
-    privateEndpoints: [
-      {
-        privateDnsZoneResourceIds: [
-          privateDnsZoneKeyVaultResourceId
-        ]
-        service: 'vault'
-        subnetResourceId: subnetResourceId
-      }
-    ]
-    enableSoftDelete: false
-    enablePurgeProtection: false
-  }
-}
 
 // Virtual Machine
-module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
-  name: '${uniqueString(deployment().name)}-vm'
-  params: {
-    name: 'vm-${identifier}'
-    location: location
-    computerName: 'vm-${identifier}'
-    adminUsername: 'vmadmin'
-    imageReference: {
-      publisher: 'microsoftvisualstudio'
-      offer: 'visualstudio2022'
-      sku: 'vs-2022-comm-latest-ws2022'
-      version: 'latest'
-    }
-    nicConfigurations: [
-      {
-        ipConfigurations: [
-          {
-            name: 'ipconfig01'
-            subnetResourceId: subnetResourceId
-          }
-        ]
-        nicSuffix: '-nic-01'
-      }
-    ]
-    osDisk: {
-      diskSizeGB: '128'
-      managedDisk: {
-        storageAccountType: 'Premium_LRS'
-      }
-    }
-    osType: 'Windows'
-    vmSize: 'Standard_DS1_v2'
-    adminPassword: virtualMachinePassword
-    managedIdentities: {
-      userAssignedResourceIds: [
-        userAssignedIdentity.outputs.resourceId
-      ]
-    }
-    encryptionAtHost: false
-  }
-}
