@@ -33,7 +33,6 @@ module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
 }
 
 // User Assigned Identity
-
 module userAssignedIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.1.2' = {
   scope: az.resourceGroup(resourceGroupNameWorkload)
   name: '${uniqueString(deployment().name)}-umi'
