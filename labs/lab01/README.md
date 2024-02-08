@@ -4,7 +4,7 @@
 
 ##### Architecture
 
-![diagram](diagram_sa.jpg)
+![diagram](diagram.png)
 
 #### Description
 

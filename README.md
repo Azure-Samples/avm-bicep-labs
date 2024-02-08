@@ -44,13 +44,11 @@ In this part, we are going to get a local copy of the lab files for use in the r
 2. Open a terminal and navigate to the new folder.
 3. Run `git clone https://github.com/Azure-Samples/avm-bicep-labs` to clone the lab files into the new folder; they will be in a subfolder called `avm-bicep-labs`.
 
-### Lab 01
-
-#### Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Pubclic Bicep Registry
+### Lab 01 - Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Pubclic Bicep Registry
 
 ##### Architecture
 
-![diagram](labs/lab01/diagram.jpg)
+![diagram](labs/lab01/diagram.png)
 
 #### Description
 
@@ -81,7 +79,7 @@ Containing:
 - Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile '<<path to the repo>>\labs\lab01\main.bicep'
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep'
 ```
 
 ### Method (2) - main.parameters.json file
@@ -89,14 +87,12 @@ New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile
 - Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile '<<path to the repo>>\labs\lab01\main.bicep' -TemplateParameterFile '<<path to the repo>>\labs\lab01\main.parameters.json'
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep' --parameters '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.parameters.json'
 ```
 
 ---
 
-### Lab 02
-
-#### Demo: Deploying an Azure Solution Using AVM modules published in the Pubclic Bicep Registry
+### Lab 02 - Demo: Deploying an Azure Solution Using AVM modules published in the Pubclic Bicep Registry
 
 Initially created by [ahmadabdalla](https://github.com/ahmadabdalla) and later adopted to use [Azure Verified Modules (AVM)](https://aka.ms/AVM).
 
