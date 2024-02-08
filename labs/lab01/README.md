@@ -28,20 +28,20 @@ Containing:
 
 - Open a Visual Studio Code session, clone the repository and then open up a VS Code session in the folder for the cloned repo.
 
-### Method (1) - main.bicep file
+### Method (1) - `main.bicep` file
 
 - Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep' --verbose
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/labs/lab01/main.bicep' --verbose
 ```
 
-### Method (2) - main.parameters.json file
+### Method (2) - `main.parameters.json` file
 
 - Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep' --parameters '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.parameters.json' --verbose
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/labs/lab01/main.bicep' --parameters '<<path to the repo>>/labs/lab01/main.parameters.json' --verbose
 ```
 
 ---
