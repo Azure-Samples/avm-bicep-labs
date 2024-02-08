@@ -4,7 +4,7 @@ Initially created by [ahmadabdalla](https://github.com/ahmadabdalla) and later a
 
 ## Architecture
 
-![diagram](diagram.jpg)
+![diagram](diagram.png)
 
 ## Description
 

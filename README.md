@@ -98,7 +98,7 @@ Initially created by [ahmadabdalla](https://github.com/ahmadabdalla) and later a
 
 ### Architecture
 
-![diagram](labs/lab02/diagram.jpg)
+![diagram](labs/lab02/diagram.png)
 
 ### Description
 
