@@ -20,6 +20,9 @@ param subnetResourceId string
 @description('Required. The private DNS zone resource ID for the Key Vault.')
 param privateDnsZoneKeyVaultResourceId string
 
+@description('Required. The Log Analytics workspace resource ID for the Key Vault.')
+param logAnalyticsWorkspaceResourceId string
+
 @description('Generated. Used as a basis for unique resource names.')
 param baseTime string = utcNow('u')
 
@@ -72,6 +75,11 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
     ]
     enableSoftDelete: false
     enablePurgeProtection: false
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspaceResourceId
+      }
+    ]
   }
 }
 
