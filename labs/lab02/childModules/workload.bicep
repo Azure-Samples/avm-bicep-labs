@@ -27,30 +27,24 @@ param logAnalyticsWorkspaceResourceId string
 param baseTime string = utcNow('u')
 
 // Resource Group
-module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
-  name: '${uniqueString(deployment().name)}-rg'
-  params: {
-    name: resourceGroupNameWorkload
-    location: location
-  }
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: resourceGroupNameWorkload
+  location: location
 }
 
 // User Assigned Identity
 module userAssignedIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.1.2' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-umi'
   params: {
     name: 'umi-${identifier}'
     location: location
   }
-  dependsOn: [
-    resourceGroup
-  ]
 }
 
 // Key Vault
 module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-kv'
   params: {
     name: 'kv-${identifier}-${substring(uniqueString(baseTime), 0, 3)}'
@@ -85,7 +79,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
 
 // Virtual Machine
 module virtualMachine 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
-  scope: az.resourceGroup(resourceGroupNameWorkload)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-vm'
   params: {
     name: 'vm-${identifier}'
