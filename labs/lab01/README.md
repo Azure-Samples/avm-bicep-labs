@@ -2,7 +2,7 @@
 
 ##### Architecture
 
-![diagram](labs/lab01/diagram.png)
+![diagram](diagram.png)
 
 #### Description
 
