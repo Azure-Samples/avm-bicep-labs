@@ -14,9 +14,6 @@ param resourceGroupName string = 'dep-${identifier}-storage.storageaccounts-rg'
 @description('Optional. The location to deploy resources to.')
 param location string = deployment().location
 
-@description('Generated. Used as a basis for unique resource names.')
-param baseTime string = utcNow('u')
-
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
   location: location
@@ -60,7 +57,7 @@ module testDeployment 'br/public:avm/res/storage/storage-account:0.5.0' = {
       ]
     }
     customerManagedKey: {
-      keyName: coreResourceGroup.outputs.keyName
+      keyName: 'keyEncryptionKey'
       keyVaultResourceId: coreResourceGroup.outputs.keyVaultResourceId
       userAssignedIdentityResourceId: coreResourceGroup.outputs.managedIdentityResourceId
     }
