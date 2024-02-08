@@ -11,34 +11,25 @@ param resourceGroupNameCore string = 'rg-${identifier}-core'
 param location string = deployment().location
 
 // Resource Group
-module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
-  name: '${uniqueString(deployment().name)}-rg'
-  params: {
-    name: resourceGroupNameCore
-    location: location
-  }
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: resourceGroupNameCore
+  location: location
 }
 
 // Log Analytics Workspace
 module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.3.1' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-law'
   params: {
     name: 'law-${identifier}'
     location: location
   }
-  dependsOn: [
-    resourceGroup
-  ]
 }
 
 // Azure Bastion Network Security Group
 module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.2' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-nsg-sn-bastionSubnet-vnet'
-  dependsOn: [
-    resourceGroup
-  ]
   params: {
     name: 'nsg-sn-bastionSubnet-vnet-${identifier}'
     location: location
@@ -196,11 +187,8 @@ module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.
 
 // Default Subnet Network Security Group
 module nsg_subnet_default 'br/public:avm/res/network/network-security-group:0.1.2' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-nsg-sn-default-vnet'
-  dependsOn: [
-    resourceGroup
-  ]
   params: {
     name: 'nsg-sn-default-vnet-${identifier}'
     location: location
@@ -209,13 +197,12 @@ module nsg_subnet_default 'br/public:avm/res/network/network-security-group:0.1.
         workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
       }
     ]
-
   }
 }
 
 // Virtual Network
 module virtualNetwork 'br/public:avm/res/network/virtual-network:0.1.1' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-vnet'
   params: {
     name: 'vnet-${identifier}'
@@ -245,7 +232,7 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.1.1' = {
 
 // Azure Bastion - Public IP
 module publicIpBastion 'br/public:avm/res/network/public-ip-address:0.2.2' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-bst-pip'
   params: {
     name: 'pip-bst-vnet-${identifier}'
@@ -258,14 +245,11 @@ module publicIpBastion 'br/public:avm/res/network/public-ip-address:0.2.2' = {
       }
     ]
   }
-  dependsOn: [
-    resourceGroup
-  ]
 }
 
 // Azure Bastion
 module azureBastion 'br/public:avm/res/network/bastion-host:0.1.1' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-bst'
   params: {
     name: 'bst-vnet-${identifier}'
@@ -283,7 +267,7 @@ module azureBastion 'br/public:avm/res/network/bastion-host:0.1.1' = {
 
 // Private DNS Zone for Azure Key Vault
 module privateDnsZoneKeyVault 'br/public:avm/res/network/private-dns-zone:0.2.3' = {
-  scope: az.resourceGroup(resourceGroupNameCore)
+  scope: resourceGroup
   name: '${uniqueString(deployment().name)}-prdns-kv'
   params: {
     name: 'privatelink.vaultcore.azure.net'
