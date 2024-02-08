@@ -1,3 +1,14 @@
+---
+page_type: sample
+languages:
+- bicep
+name: Introduction to using Azure Verified Modules for Bicep
+description: A walk through lab demonstrating how to use the Azure Verified Modules for Bicep.
+products:
+- azure
+urlFragment: avm-bicep-labs
+---
+
 # Introduction to using Azure Verified Modules for Bicep
 
 This repository provides lab-based samples that demonstrates how to use the Azure Verified Modules for Bicep. This repository contains full working lab solutions (lab01, lab02, ...), but you should follow the steps in the lab to understand how it fits together.
