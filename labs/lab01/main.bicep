@@ -3,71 +3,66 @@ targetScope = 'subscription'
 metadata name = 'Using Customer-Managed-Keys with User-Assigned identity'
 metadata description = 'This instance deploys the module using Customer-Managed-Keys using a User-Assigned Identity to access the Customer-Managed-Key secret.'
 
+@maxLength(7)
+@description('Optional. Unique identifier for the deployment. Will appear in resource names. Must be 7 characters or less.')
+param identifier string = 'lab01'
+
 @description('Optional. The name of the resource group to deploy for testing purposes.')
 @maxLength(90)
-param resourceGroupName string = 'dep-${namePrefix}-storage.storageaccounts-${serviceShort}-rg'
+param resourceGroupName string = 'dep-${identifier}-storage.storageaccounts-rg'
 
 @description('Optional. The location to deploy resources to.')
-param resourceLocation string = deployment().location
-
-@description('Optional. A short identifier for the kind of deployment. Should be kept short to not run into resource-name length-constraints.')
-param serviceShort string = 'ssauacr'
+param location string = deployment().location
 
 @description('Generated. Used as a basis for unique resource names.')
 param baseTime string = utcNow('u')
 
-@description('Optional. A token to inject into the name of each resource.')
-param namePrefix string = 'lab01'
-
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
-  location: resourceLocation
+  location: location
 }
 
-module nestedDependencies 'dependencies.bicep' = {
+module coreResourceGroup 'core.bicep' = {
   scope: resourceGroup
-  name: '${uniqueString(deployment().name, resourceLocation)}-nestedDependencies'
+  name: '${uniqueString(deployment().name, location)}-core'
   params: {
-    location: resourceLocation
-    // Adding base time to make the name unique as purge protection must be enabled (but may not be longer than 24 characters total)
-    keyVaultName: 'dep-${namePrefix}-kv-${serviceShort}-${substring(uniqueString(baseTime), 0, 3)}'
-    virtualNetworkName: 'dep-${namePrefix}-vnet-${serviceShort}'
-    managedIdentityName: 'dep-${namePrefix}-msi-${serviceShort}'
+    location: location
+    identifier: identifier
   }
 }
 
 module testDeployment 'br/public:avm/res/storage/storage-account:0.5.0' = {
   scope: resourceGroup
-  name: '${uniqueString(deployment().name, resourceLocation)}-${namePrefix}-${serviceShort}'
+  name: '${uniqueString(deployment().name, location)}-${identifier}'
   params: {
-    location: resourceLocation
-    name: '${namePrefix}${serviceShort}001'
+    location: location
+    name: '${identifier}-sa'
     privateEndpoints: [
       {
         service: 'blob'
-        subnetResourceId: nestedDependencies.outputs.subnetResourceId
+        subnetResourceId: coreResourceGroup.outputs.subnetResourceId
         privateDnsZoneResourceIds: [
-          nestedDependencies.outputs.privateDNSZoneResourceId
+          coreResourceGroup.outputs.privateDNSZoneResourceId
         ]
       }
     ]
     blobServices: {
       containers: [
         {
-          name: '${namePrefix}container'
+          name: '${identifier}container'
           publicAccess: 'None'
         }
       ]
     }
     managedIdentities: {
       userAssignedResourceIds: [
-        nestedDependencies.outputs.managedIdentityResourceId
+        coreResourceGroup.outputs.managedIdentityResourceId
       ]
     }
     customerManagedKey: {
-      keyName: nestedDependencies.outputs.keyName
-      keyVaultResourceId: nestedDependencies.outputs.keyVaultResourceId
-      userAssignedIdentityResourceId: nestedDependencies.outputs.managedIdentityResourceId
+      keyName: coreResourceGroup.outputs.keyName
+      keyVaultResourceId: coreResourceGroup.outputs.keyVaultResourceId
+      userAssignedIdentityResourceId: coreResourceGroup.outputs.managedIdentityResourceId
     }
   }
 }
