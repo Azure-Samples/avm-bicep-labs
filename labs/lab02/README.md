@@ -31,7 +31,13 @@ Containing:
 
 - Open a Visual Studio Code session, clone the repository and then open up a VS Code session in the folder for the cloned repo.
 
-### Method (1) - main.bicep file
+:warning: Ensure you are logged into Azure using Azure PowerShell.
+
+```powershell
+Add-AzAccount -Subscription '<<your subscription name>>'
+```
+
+### Method (1) - `main.bicep` file
 
 - Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
@@ -39,7 +45,7 @@ Containing:
 New-AzDeployment -Location 'australiaeast' -deploymentname 'avmdemo' -TemplateFile '<<path to the repo>>\labs\lab02\main.bicep'
 ```
 
-### Method (2) - main.parameters.json file
+### Method (2) - `main.parameters.json` file
 
 - Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
@@ -74,7 +80,7 @@ Once the deployment is complete, navigate to the Virtual Machine blade, and conn
 
 ---
 
-- Open up PowerShell on the Virtual Machine, and authenticate to Azure using the System Managed Identity for the Virtual Machine, then retrieve the Key Vault information
+- Open up PowerShell on the Virtual Machine, and authenticate to Azure using the User Managed Identity for the Virtual Machine, then retrieve the Key Vault information
 
 ```powershell
 Add-AzureRmAccount -Identity
