@@ -5,12 +5,18 @@ targetScope = 'subscription'
 param identifier string = 'avmdemo'
 
 @description('Optional. The core Resource Group name.')
-param  resourceGroupNameCore string = 'rg-${identifier}-core'
+param resourceGroupNameCore string = 'rg-${identifier}-core'
 
 @description('Optional. The location for all resources.')
 param location string = deployment().location
 
 // Resource Group
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: resourceGroupNameCore
+  location: location
+}
+
+// Log Analytics Workspace
 
 // Azure Bastion Network Security Group
 
@@ -24,7 +30,6 @@ param location string = deployment().location
 
 // Private DNS Zone for Azure Key Vault
 
-
-// Outputs
-// output workloadSubnetResourceId string = 
-// output privateDnsZoneKeyVaultResourceId string =
+output workloadSubnetResourceId string = virtualNetwork.outputs.subnetResourceIds[1]
+output privateDnsZoneKeyVaultResourceId string = privateDnsZoneKeyVault.outputs.resourceId
+output logAnalyticsWorkspaceResourceId string = logAnalyticsWorkspace.outputs.resourceId

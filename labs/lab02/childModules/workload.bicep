@@ -20,10 +20,17 @@ param subnetResourceId string
 @description('Required. The private DNS zone resource ID for the Key Vault.')
 param privateDnsZoneKeyVaultResourceId string
 
+@description('Required. The Log Analytics workspace resource ID for the Key Vault.')
+param logAnalyticsWorkspaceResourceId string
+
 @description('Generated. Used as a basis for unique resource names.')
 param baseTime string = utcNow('u')
 
 // Resource Group
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: resourceGroupNameWorkload
+  location: location
+}
 
 // User Assigned Identity
 
