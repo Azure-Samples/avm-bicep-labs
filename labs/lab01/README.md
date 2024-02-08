@@ -1,10 +1,8 @@
-### Lab 01
-
-#### Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Pubclic Bicep Registry
+### Lab 01 - Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Public Bicep Registry
 
 ##### Architecture
 
-![diagram](diagram.png)
+![diagram](labs/lab01/diagram.png)
 
 #### Description
 
@@ -35,7 +33,7 @@ Containing:
 - Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile '<<path to the repo>>\labs\lab01\main.bicep'
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep' --verbose
 ```
 
 ### Method (2) - main.parameters.json file
@@ -43,7 +41,7 @@ New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile
 - Deploy the [main.parameters.json](main.parameters.json) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
 
 ```powershell
-New-AzDeployment -Location 'australiaeast' -deploymentname 'lab01' -TemplateFile '<<path to the repo>>\labs\lab01\main.bicep' -TemplateParameterFile '<<path to the repo>>\labs\lab01\main.parameters.json'
+az deployment sub create --location 'australiaeast' --name 'lab01' --template-file '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.bicep' --parameters '<<path to the repo>>/avm-bicep-labs/labs/lab01/main.parameters.json' --verbose
 ```
 
 ---

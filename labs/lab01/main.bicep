@@ -5,22 +5,23 @@ metadata description = 'This instance deploys the module using Customer-Managed-
 
 @maxLength(7)
 @description('Optional. Unique identifier for the deployment. Will appear in resource names. Must be 7 characters or less.')
-param identifier string = 'lab01'
-
-@description('Optional. The name of the resource group to deploy for testing purposes.')
-@maxLength(90)
-param resourceGroupName string = 'dep-${identifier}-storage.storageaccounts-rg'
+param identifier string
 
 @description('Optional. The location to deploy resources to.')
 param location string = deployment().location
 
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: resourceGroupName
+resource coreResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: '${identifier}-core-rg'
   location: location
 }
 
-module coreResourceGroup 'core.bicep' = {
-  scope: resourceGroup
+resource workloadResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: '${identifier}-workload-rg'
+  location: location
+}
+
+module core 'core.bicep' = {
+  scope: coreResourceGroup
   name: '${uniqueString(deployment().name, location)}-core'
   params: {
     location: location
@@ -29,17 +30,17 @@ module coreResourceGroup 'core.bicep' = {
 }
 
 module testDeployment 'br/public:avm/res/storage/storage-account:0.5.0' = {
-  scope: resourceGroup
+  scope: workloadResourceGroup
   name: '${uniqueString(deployment().name, location)}-${identifier}'
   params: {
     location: location
-    name: '${identifier}-sa'
+    name: '${identifier}saasdsg'
     privateEndpoints: [
       {
         service: 'blob'
-        subnetResourceId: coreResourceGroup.outputs.subnetResourceId
+        subnetResourceId: core.outputs.subnetResourceId
         privateDnsZoneResourceIds: [
-          coreResourceGroup.outputs.privateDNSZoneResourceId
+          core.outputs.privateDNSZoneResourceId
         ]
       }
     ]
@@ -53,13 +54,13 @@ module testDeployment 'br/public:avm/res/storage/storage-account:0.5.0' = {
     }
     managedIdentities: {
       userAssignedResourceIds: [
-        coreResourceGroup.outputs.managedIdentityResourceId
+        core.outputs.managedIdentityResourceId
       ]
     }
     customerManagedKey: {
       keyName: 'keyEncryptionKey'
-      keyVaultResourceId: coreResourceGroup.outputs.keyVaultResourceId
-      userAssignedIdentityResourceId: coreResourceGroup.outputs.managedIdentityResourceId
+      keyVaultResourceId: core.outputs.keyVaultResourceId
+      userAssignedIdentityResourceId: core.outputs.managedIdentityResourceId
     }
   }
 }

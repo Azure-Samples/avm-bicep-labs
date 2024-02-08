@@ -1,4 +1,4 @@
-# Demo: Deploying an Azure Solution Using AVM modules published in the Pubclic Bicep Registry
+# Demo: Deploying an Azure Solution Using AVM modules published in the Public Bicep Registry
 
 Initially created by [ahmadabdalla](https://github.com/ahmadabdalla) and later adopted to use [Azure Verified Modules (AVM)](https://aka.ms/AVM).
 
