@@ -16,9 +16,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
     keys: [
       {
         name: 'keyEncryptionKey'
-        properties: {
-          kty: 'RSA'
-        }
+        kty: 'RSA'
       }
     ]
     roleAssignments: [
