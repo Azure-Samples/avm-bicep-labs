@@ -5,13 +5,10 @@ param location string
 @description('Optional. Unique identifier for the deployment. Will appear in resource names. Must be 7 characters or less.')
 param identifier string
 
-@description('Generated. Used as a basis for unique resource names.')
-param baseTime string = utcNow('u')
-
 module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
   name: '${uniqueString(deployment().name)}-kv'
   params: {
-    name: 'kv-${identifier}-${substring(uniqueString(baseTime), 0, 3)}'
+    name: '${identifier}-kv-fsdg'
     location: location
     enablePurgeProtection: true
     softDeleteRetentionInDays: 7
@@ -31,6 +28,15 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.3.4' = {
         principalType: 'ServicePrincipal'
       }
     ]
+    // privateEndpoints: [
+    //   {
+    //     privateDnsZoneResourceIds: [
+    //       privateDNSZone.outputs.resourceId
+    //     ]
+    //     service: 'vault'
+    //     subnetResourceId: virtualNetwork.outputs.subnetResourceIds[0]
+    //   }
+    // ]
   }
 }
 
