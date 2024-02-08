@@ -5,7 +5,7 @@ targetScope = 'subscription'
 param identifier string = 'avmdemo'
 
 @description('Optional. The core Resource Group name.')
-param  resourceGroupNameCore string = 'rg-${identifier}-core'
+param resourceGroupNameCore string = 'rg-${identifier}-core'
 
 @description('Optional. The location for all resources.')
 param location string = deployment().location
@@ -17,6 +17,19 @@ module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.2' = {
     name: resourceGroupNameCore
     location: location
   }
+}
+
+// Log Analytics Workspace
+module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.3.1' = {
+  scope: az.resourceGroup(resourceGroupNameCore)
+  name: '${uniqueString(deployment().name)}-law'
+  params: {
+    name: 'law-${identifier}'
+    location: location
+  }
+  dependsOn: [
+    resourceGroup
+  ]
 }
 
 // Azure Bastion Network Security Group
@@ -173,6 +186,11 @@ module nsg_subnet_bastion 'br/public:avm/res/network/network-security-group:0.1.
         }
       }
     ]
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
   }
 }
 
@@ -186,6 +204,12 @@ module nsg_subnet_default 'br/public:avm/res/network/network-security-group:0.1.
   params: {
     name: 'nsg-sn-default-vnet-${identifier}'
     location: location
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
+
   }
 }
 
@@ -211,6 +235,11 @@ module virtualNetwork 'br/public:avm/res/network/virtual-network:0.1.1' = {
         networkSecurityGroupId: nsg_subnet_default.outputs.resourceId
       }
     ]
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
   }
 }
 
@@ -223,6 +252,11 @@ module publicIpBastion 'br/public:avm/res/network/public-ip-address:0.2.2' = {
     location: location
     skuName: 'Standard'
     publicIPAllocationMethod: 'Static'
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
   }
   dependsOn: [
     resourceGroup
@@ -239,6 +273,11 @@ module azureBastion 'br/public:avm/res/network/bastion-host:0.1.1' = {
     vNetId: virtualNetwork.outputs.resourceId
     skuName: 'Basic'
     bastionSubnetPublicIpResourceId: publicIpBastion.outputs.resourceId
+    diagnosticSettings: [
+      {
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
   }
 }
 
@@ -260,3 +299,4 @@ module privateDnsZoneKeyVault 'br/public:avm/res/network/private-dns-zone:0.2.3'
 
 output workloadSubnetResourceId string = virtualNetwork.outputs.subnetResourceIds[1]
 output privateDnsZoneKeyVaultResourceId string = privateDnsZoneKeyVault.outputs.resourceId
+output logAnalyticsWorkspaceResourceId string = logAnalyticsWorkspace.outputs.resourceId

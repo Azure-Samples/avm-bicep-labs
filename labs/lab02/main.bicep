@@ -36,6 +36,7 @@ module workloadResourceGroup 'childModules/workload.bicep' = {
     resourceGroupNameWorkload: resourceGroupNameWorkload
     privateDnsZoneKeyVaultResourceId: coreResourceGroup.outputs.privateDnsZoneKeyVaultResourceId
     subnetResourceId: coreResourceGroup.outputs.workloadSubnetResourceId
+    logAnalyticsWorkspaceResourceId: coreResourceGroup.outputs.logAnalyticsWorkspaceResourceId
     virtualMachinePassword: virtualMachinePassword
     identifier: identifier
     location: location
