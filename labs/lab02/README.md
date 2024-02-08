@@ -31,6 +31,12 @@ Containing:
 
 - Open a Visual Studio Code session, clone the repository and then open up a VS Code session in the folder for the cloned repo.
 
+:warning: Ensure you are logged into Azure using Azure PowerShell.
+
+```powershell
+Add-AzAccount -Subscription '<<your subscription name>>'
+```
+
 ### Method (1) - `main.bicep` file
 
 - Deploy the [main.bicep](main.bicep) by modifying the `identifier` parameter to something that is unique to your deployment (i.e. a 5 letter string). Additionally you can also change the `location` parameter to a different Azure region of your choice.
