@@ -44,9 +44,7 @@ In this part, we are going to get a local copy of the lab files for use in the r
 2. Open a terminal and navigate to the new folder.
 3. Run `git clone https://github.com/Azure-Samples/avm-bicep-labs` to clone the lab files into the new folder; they will be in a subfolder called `avm-bicep-labs`.
 
-### Lab 01
-
-#### Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Pubclic Bicep Registry
+### Lab 01 - Demo: Deploying a Storage Account + Customer Managed Key Solution Using AVM modules published in the Pubclic Bicep Registry
 
 ##### Architecture
 
@@ -94,9 +92,7 @@ az deployment sub create --location 'australiaeast' --name 'lab01' --template-fi
 
 ---
 
-### Lab 02
-
-#### Demo: Deploying an Azure Solution Using AVM modules published in the Pubclic Bicep Registry
+### Lab 02 - Demo: Deploying an Azure Solution Using AVM modules published in the Pubclic Bicep Registry
 
 Initially created by [ahmadabdalla](https://github.com/ahmadabdalla) and later adopted to use [Azure Verified Modules (AVM)](https://aka.ms/AVM).
 
