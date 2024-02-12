@@ -19,12 +19,6 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.6.0' = {
   name: '${uniqueString(deployment().name, location)}-sa'
   params: {
     name: 'sa${uniqueString(deployment().name, location)}001'
-    roleAssignments: [
-      {
-        principalId:
-        roleDefinitionIdOrName:
-      }
-    ]
   }
 }
 
