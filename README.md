@@ -29,6 +29,8 @@ This repository provides lab-based samples that demonstrates how to use the Azur
 - Azure CLI: [Download](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli#install-or-update)
 - Azure PowerShell: [Download](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0)
 - An Azure Subscription: [Free Account](https://azure.microsoft.com/en-gb/free/search/)
+- Visual Studio Code: [Download](https://code.visualstudio.com/Download)
+  - Bicep Extension: [Download](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep)
 
 ### Quickstart
 
